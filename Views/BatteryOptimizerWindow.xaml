@@ -1,0 +1,208 @@
+<Window x:Class="PCBooster.Views.BatteryOptimizerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Battery Optimizer — PC Booster Pro"
+        Height="580" Width="720"
+        WindowStartupLocation="CenterOwner"
+        Background="#1A1A2E"
+        ResizeMode="CanMinimize">
+
+    <Window.Resources>
+        <Style x:Key="Card" TargetType="Border">
+            <Setter Property="Background"      Value="#16213E"/>
+            <Setter Property="BorderBrush"     Value="#2D3561"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius"    Value="10"/>
+            <Setter Property="Padding"         Value="16"/>
+        </Style>
+        <Style x:Key="TipItem" TargetType="Border">
+            <Setter Property="Background"      Value="#0D1830"/>
+            <Setter Property="BorderBrush"     Value="#2D3561"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius"    Value="6"/>
+            <Setter Property="Padding"         Value="12,9"/>
+            <Setter Property="Margin"          Value="0,0,0,6"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,14">
+            <TextBlock Text="🔋" FontSize="22" Margin="0,0,10,0" VerticalAlignment="Center"/>
+            <StackPanel>
+                <TextBlock Text="Battery Optimizer" Foreground="#E8EAF6" FontSize="18" FontWeight="Medium"/>
+                <TextBlock x:Name="BatterySubtitle" Text="Reading battery info…"
+                           Foreground="#9FA8C0" FontSize="12"/>
+            </StackPanel>
+        </StackPanel>
+
+        <!-- Top cards row -->
+        <Grid Grid.Row="1" Margin="0,0,0,12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="12"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="12"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Charge level card -->
+            <Border Grid.Column="0" Style="{StaticResource Card}">
+                <StackPanel HorizontalAlignment="Center">
+                    <!-- Battery icon drawn on canvas -->
+                    <Canvas x:Name="BatteryCanvas" Width="80" Height="80"
+                            HorizontalAlignment="Center" Margin="0,0,0,8"/>
+                    <TextBlock x:Name="ChargePercent" Text="—%" Foreground="#E8EAF6"
+                               FontSize="26" FontWeight="Bold" HorizontalAlignment="Center"/>
+                    <TextBlock x:Name="ChargeStatus" Text="—" Foreground="#9FA8C0"
+                               FontSize="12" HorizontalAlignment="Center"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Health card -->
+            <Border Grid.Column="2" Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Text="BATTERY HEALTH" Foreground="#9FA8C0" FontSize="11" Margin="0,0,0,6"/>
+                    <TextBlock x:Name="HealthLabel" Text="—" Foreground="#28C840"
+                               FontSize="22" FontWeight="Bold" Margin="0,0,0,6"/>
+                    <ProgressBar x:Name="HealthBar" Height="6" Maximum="100" Value="0"
+                                 Background="#2D3561" Foreground="#28C840"
+                                 BorderThickness="0" Margin="0,0,0,8"/>
+                    <TextBlock x:Name="WearText" Text="Wear level: —"
+                               Foreground="#9FA8C0" FontSize="12"/>
+                    <TextBlock x:Name="ChemText" Text=""
+                               Foreground="#4A5568" FontSize="11" Margin="0,4,0,0"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Time / Capacity card -->
+            <Border Grid.Column="4" Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Text="TIME REMAINING" Foreground="#9FA8C0" FontSize="11" Margin="0,0,0,6"/>
+                    <TextBlock x:Name="TimeRemaining" Text="—" Foreground="#FEBC2E"
+                               FontSize="22" FontWeight="Bold" Margin="0,0,0,10"/>
+                    <TextBlock Text="CAPACITY" Foreground="#9FA8C0" FontSize="11" Margin="0,0,0,4"/>
+                    <TextBlock x:Name="CapacityText" Text="— mWh / — mWh"
+                               Foreground="#E8EAF6" FontSize="13" FontWeight="Medium"/>
+                    <TextBlock x:Name="CapacityNote" Text="Full charge / Design"
+                               Foreground="#4A5568" FontSize="11" Margin="0,2,0,0"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <!-- Tips + Actions -->
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="12"/>
+                <ColumnDefinition Width="220"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Tips list -->
+            <Border Grid.Column="0" Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Text="💡  Optimization Tips" Foreground="#E8EAF6"
+                               FontSize="13" FontWeight="Medium" Margin="0,0,0,12"/>
+                    <StackPanel x:Name="TipsPanel"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Actions -->
+            <Border Grid.Column="2" Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Text="Quick Actions" Foreground="#E8EAF6"
+                               FontSize="13" FontWeight="Medium" Margin="0,0,0,12"/>
+
+                    <Button Content="⚡  Enable Battery Saver"
+                            Click="EnableBatterySaver_Click"
+                            Background="#1A6FAD" Foreground="White" BorderThickness="0"
+                            Padding="0,9" Cursor="Hand" FontSize="12" Margin="0,0,0,8">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border x:Name="bg" Background="{TemplateBinding Background}" CornerRadius="6" Padding="{TemplateBinding Padding}">
+                                    <ContentPresenter HorizontalAlignment="Center"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="bg" Property="Background" Value="#155A8F"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+
+                    <Button Content="🔆  Lower Brightness"
+                            Click="LowerBrightness_Click"
+                            Background="#2D1F0A" Foreground="#FEBC2E" BorderThickness="1"
+                            BorderBrush="#5C3D12" Padding="0,9" Cursor="Hand" FontSize="12" Margin="0,0,0,8">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border x:Name="bg" Background="{TemplateBinding Background}"
+                                        BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}"
+                                        CornerRadius="6" Padding="{TemplateBinding Padding}">
+                                    <ContentPresenter HorizontalAlignment="Center"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="bg" Property="Background" Value="#3D2A0D"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+
+                    <Button Content="📊  Power Options"
+                            Click="OpenPowerOptions_Click"
+                            Background="#16213E" Foreground="#9FA8C0" BorderThickness="1"
+                            BorderBrush="#2D3561" Padding="0,9" Cursor="Hand" FontSize="12" Margin="0,0,0,8">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border x:Name="bg" Background="{TemplateBinding Background}"
+                                        BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}"
+                                        CornerRadius="6" Padding="{TemplateBinding Padding}">
+                                    <ContentPresenter HorizontalAlignment="Center"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="bg" Property="Background" Value="#1E2A4A"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+
+                    <Button Content="📋  Battery Report"
+                            Click="BatteryReport_Click"
+                            Background="#16213E" Foreground="#9FA8C0" BorderThickness="1"
+                            BorderBrush="#2D3561" Padding="0,9" Cursor="Hand" FontSize="12">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border x:Name="bg" Background="{TemplateBinding Background}"
+                                        BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}"
+                                        CornerRadius="6" Padding="{TemplateBinding Padding}">
+                                    <ContentPresenter HorizontalAlignment="Center"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="bg" Property="Background" Value="#1E2A4A"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+
+                    <Separator Background="#2D3561" Margin="0,12"/>
+
+                    <TextBlock x:Name="ActionStatus" Text="" Foreground="#9FA8C0"
+                               FontSize="11" TextWrapping="Wrap"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Grid>
+</Window>

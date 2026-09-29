@@ -1,0 +1,212 @@
+<Window x:Class="PCBooster.Views.NetworkMonitorWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Network Monitor — PC Booster Pro"
+        Height="560" Width="780"
+        WindowStartupLocation="CenterOwner"
+        Background="#1A1A2E"
+        ResizeMode="CanResize"
+        MinWidth="640" MinHeight="420">
+
+    <Window.Resources>
+        <Style x:Key="CardBorder" TargetType="Border">
+            <Setter Property="Background"       Value="#16213E"/>
+            <Setter Property="BorderBrush"      Value="#2D3561"/>
+            <Setter Property="BorderThickness"  Value="1"/>
+            <Setter Property="CornerRadius"     Value="10"/>
+            <Setter Property="Padding"          Value="16"/>
+        </Style>
+        <Style x:Key="SectionLabel" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#9FA8C0"/>
+            <Setter Property="FontSize"   Value="11"/>
+            <Setter Property="Margin"     Value="0,0,0,4"/>
+        </Style>
+        <Style x:Key="ValueLabel" TargetType="TextBlock">
+            <Setter Property="Foreground"  Value="#E8EAF6"/>
+            <Setter Property="FontSize"    Value="13"/>
+            <Setter Property="FontWeight"  Value="Medium"/>
+        </Style>
+        <Style x:Key="SpeedNumber" TargetType="TextBlock">
+            <Setter Property="Foreground"  Value="#4FA3E0"/>
+            <Setter Property="FontSize"    Value="28"/>
+            <Setter Property="FontWeight"  Value="Bold"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,14">
+            <TextBlock Text="🌐" FontSize="22" Margin="0,0,10,0" VerticalAlignment="Center"/>
+            <StackPanel VerticalAlignment="Center">
+                <TextBlock Text="Network Monitor" Foreground="#E8EAF6" FontSize="18" FontWeight="Medium"/>
+                <TextBlock x:Name="AdapterLabel" Text="Loading adapter…"
+                           Foreground="#9FA8C0" FontSize="12"/>
+            </StackPanel>
+            <Border Background="#1B3A1B" BorderBrush="#1B6E3B" BorderThickness="1"
+                    CornerRadius="12" Padding="10,4" Margin="16,0,0,0" VerticalAlignment="Center">
+                <StackPanel Orientation="Horizontal">
+                    <Ellipse Width="6" Height="6" Fill="#28C840" Margin="0,0,6,0" VerticalAlignment="Center">
+                        <Ellipse.Triggers>
+                            <EventTrigger RoutedEvent="Loaded">
+                                <BeginStoryboard>
+                                    <Storyboard RepeatBehavior="Forever">
+                                        <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                         From="1" To="0.2" Duration="0:0:1" AutoReverse="True"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </Ellipse.Triggers>
+                    </Ellipse>
+                    <TextBlock x:Name="ConnStatusLabel" Text="Connected"
+                               Foreground="#28C840" FontSize="12"/>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+
+        <!-- Speed Cards -->
+        <Grid Grid.Row="1" Margin="0,0,0,12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="12"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="12"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="12"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Download Speed -->
+            <Border Grid.Column="0" Style="{StaticResource CardBorder}">
+                <StackPanel>
+                    <TextBlock Text="⬇  Download" Style="{StaticResource SectionLabel}"/>
+                    <TextBlock x:Name="DownloadSpeed" Text="—" Style="{StaticResource SpeedNumber}"
+                               Foreground="#28C840"/>
+                    <ProgressBar x:Name="DownloadBar" Height="4" Maximum="100" Value="0"
+                                 Background="#2D3561" Foreground="#28C840"
+                                 BorderThickness="0" Margin="0,8,0,0"/>
+                    <TextBlock x:Name="DownloadPeak" Text="Peak: —"
+                               Foreground="#4A5568" FontSize="11" Margin="0,4,0,0"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Upload Speed -->
+            <Border Grid.Column="2" Style="{StaticResource CardBorder}">
+                <StackPanel>
+                    <TextBlock Text="⬆  Upload" Style="{StaticResource SectionLabel}"/>
+                    <TextBlock x:Name="UploadSpeed" Text="—" Style="{StaticResource SpeedNumber}"
+                               Foreground="#4FA3E0"/>
+                    <ProgressBar x:Name="UploadBar" Height="4" Maximum="100" Value="0"
+                                 Background="#2D3561" Foreground="#4FA3E0"
+                                 BorderThickness="0" Margin="0,8,0,0"/>
+                    <TextBlock x:Name="UploadPeak" Text="Peak: —"
+                               Foreground="#4A5568" FontSize="11" Margin="0,4,0,0"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Total Downloaded -->
+            <Border Grid.Column="4" Style="{StaticResource CardBorder}">
+                <StackPanel>
+                    <TextBlock Text="📥  Total Received" Style="{StaticResource SectionLabel}"/>
+                    <TextBlock x:Name="TotalReceived" Text="—" Foreground="#E8EAF6"
+                               FontSize="22" FontWeight="Medium"/>
+                    <TextBlock Text="since last reboot" Foreground="#4A5568" FontSize="11" Margin="0,4,0,0"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Total Sent -->
+            <Border Grid.Column="6" Style="{StaticResource CardBorder}">
+                <StackPanel>
+                    <TextBlock Text="📤  Total Sent" Style="{StaticResource SectionLabel}"/>
+                    <TextBlock x:Name="TotalSent" Text="—" Foreground="#E8EAF6"
+                               FontSize="22" FontWeight="Medium"/>
+                    <TextBlock Text="since last reboot" Foreground="#4A5568" FontSize="11" Margin="0,4,0,0"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <!-- Speed Graph + Adapter Info -->
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="12"/>
+                <ColumnDefinition Width="260"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Speed History Graph -->
+            <Border Grid.Column="0" Style="{StaticResource CardBorder}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                        <TextBlock Text="Speed History" Foreground="#E8EAF6" FontSize="13" FontWeight="Medium"/>
+                        <TextBlock Text="  last 30 samples" Foreground="#4A5568" FontSize="11" VerticalAlignment="Center"/>
+                        <StackPanel Orientation="Horizontal" Margin="16,0,0,0">
+                            <Rectangle Width="16" Height="3" Fill="#28C840" VerticalAlignment="Center" Margin="0,0,4,0"/>
+                            <TextBlock Text="Download" Foreground="#9FA8C0" FontSize="11"/>
+                            <Rectangle Width="16" Height="3" Fill="#4FA3E0" VerticalAlignment="Center" Margin="12,0,4,0"/>
+                            <TextBlock Text="Upload" Foreground="#9FA8C0" FontSize="11"/>
+                        </StackPanel>
+                    </StackPanel>
+                    <Canvas x:Name="SpeedGraph" Grid.Row="1" Background="Transparent" ClipToBounds="True"/>
+                </Grid>
+            </Border>
+
+            <!-- Adapter Info -->
+            <Border Grid.Column="2" Style="{StaticResource CardBorder}">
+                <StackPanel>
+                    <TextBlock Text="Adapter Details" Foreground="#E8EAF6"
+                               FontSize="13" FontWeight="Medium" Margin="0,0,0,14"/>
+
+                    <TextBlock Text="IP ADDRESS" Style="{StaticResource SectionLabel}"/>
+                    <TextBlock x:Name="IpLabel" Text="—" Style="{StaticResource ValueLabel}" Margin="0,0,0,10"/>
+
+                    <TextBlock Text="MAC ADDRESS" Style="{StaticResource SectionLabel}"/>
+                    <TextBlock x:Name="MacLabel" Text="—" Style="{StaticResource ValueLabel}" Margin="0,0,0,10"/>
+
+                    <TextBlock Text="STATUS" Style="{StaticResource SectionLabel}"/>
+                    <TextBlock x:Name="StatusLabel" Text="—" Style="{StaticResource ValueLabel}" Margin="0,0,0,10"/>
+
+                    <Separator Background="#2D3561" Margin="0,4,0,12"/>
+
+                    <TextBlock Text="ADAPTER NAME" Style="{StaticResource SectionLabel}"/>
+                    <TextBlock x:Name="FullAdapterName" Text="—" Style="{StaticResource ValueLabel}"
+                               TextWrapping="Wrap" Margin="0,0,0,10"/>
+
+                    <Separator Background="#2D3561" Margin="0,4,0,12"/>
+
+                    <Button Content="Run Speed Test" Click="SpeedTest_Click"
+                            Background="#1A6FAD" Foreground="White" BorderThickness="0"
+                            Padding="0,9" Cursor="Hand" FontSize="13">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border x:Name="bg" Background="{TemplateBinding Background}"
+                                        CornerRadius="6" Padding="{TemplateBinding Padding}">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="bg" Property="Background" Value="#155A8F"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <!-- Status -->
+        <TextBlock x:Name="NetStatusText" Grid.Row="3"
+                   Text="Monitoring network…" Foreground="#4A5568"
+                   FontSize="11" Margin="0,10,0,0"/>
+    </Grid>
+</Window>
